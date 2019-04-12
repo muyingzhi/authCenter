@@ -1,0 +1,238 @@
+@charset "utf-8";
+body{
+	color: #4f4f4f;
+	padding: 0px 10px 10px 10px;
+	font-size: 12px;
+	position: relative;
+}
+.zhuanjia_cont>div{
+	margin-left: 30px;
+	margin-bottom: 50px;
+}
+/*添加执业医师*/
+.add_doc{
+	width: 240px;
+	height: 345px;
+	cursor: pointer;
+	background: url("../images/add_doc.png");
+}
+/*医生详细*/
+.doc_detail_cont{
+	width: 240px;
+}
+.doc_detail{
+	overflow: auto;
+	padding: 10px 24px 10px 16px;
+	height: 266px;
+	border-left:1px solid #ccc;
+	border-right: 1px solid #ccc; 
+}
+.doc_detail_title{
+	font-size: 14px;
+	color: #007bba;
+	line-height: 40px;
+	background: #c1e5ff;
+	text-indent: 20px;
+	border: 1px solid #ccc;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom: none;
+}
+.doc_detail .doc_addr{
+	color: #c1e5ff;
+	margin-bottom: 12px;
+}
+.doc_detail>ul>li{
+	margin-bottom: 12px;
+}
+.jianjie{
+	border: 1px solid #ccc;
+	height: 56px;
+	margin-top: 8px;
+}
+.doc_detail .chuzhen{
+	width: 70px;
+	height: 28px;
+	background: url("../images/chuzhen.png");
+	margin-top: 12px;
+}
+.doc_detail .jigou{
+	margin-top: 9px;
+	width: 70px;
+	height: 28px;
+	background: url("../images/jigou.png");
+}
+.bianji_cont{
+	height: 38px;
+	background: #fcfcfc;
+	border: 1px solid #ccc;
+	border-top:none;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+.bianji{
+	width: 70px;
+	height: 28px;
+	margin-top: 4.5px;
+	display: inline-block;
+	margin-left: 20px;
+	background: url("../images/bianji.png");	
+}
+.chuzhen_det{
+	margin-top: 9px;
+	border: 1px solid #ccc;
+	border-bottom: none;
+}
+.doc_detail>.chuzhen_det li{
+	text-indent: 20px;
+	margin-bottom: 0px;
+	line-height: 30px;
+	border-bottom: 1px solid #ccc;
+}
+/*专家注册弹出框*/
+.mask_doc,.mask_resp{
+	display: none;
+	position: absolute;
+	top:0px;
+	left:0px;
+	right: 0px;
+	bottom:0px;
+	height: 100%;
+/*	background: rgba(0,0,0,0.2);*/
+}
+.pop_up{
+	position: absolute;
+	background: #fff;
+	/* top:87px; */
+	left:50%;
+}
+.doc_info_cont{
+	color: #666;
+	width: 580px;
+	margin-left:-290px;
+}
+.doc_info_cont input,.doc_info_cont select{
+	width: 170px;
+	height: 27px;
+	border: 1px solid #ccc;
+	padding-left: 5px;
+}
+.pop_up_title{
+	font-size: 14px;
+	color: #333;
+	font-weight: bold;
+	line-height: 40px;
+	background: #bfe3fc;
+	text-align: center;
+	border: 1px solid #ccc;	
+	border-bottom: none;
+	border-top-left-radius:3px;
+	border-top-right-radius: 3px; 
+}
+.pop_close{
+	background: url("../images/pop_close.png") center no-repeat;
+	width: 35px;
+	height: 35px;
+	margin-top:2px;
+	cursor: pointer;
+}
+.doc_info_d{
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border: 1px solid #ccc;	
+	border-top: none;
+	overflow: auto;		
+}
+.doc_info{
+	padding: 20px 25px 0px 25px;
+}
+.doc_info>table td{
+	text-align: right;
+	padding-bottom: 15px;
+}
+.doc_info>table tr td:nth-child(2n+1){
+	padding-right: 3px;
+}
+.doc_info textarea{
+    width: 450px;
+    line-height: 18px;
+    height: 97px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    resize: none;	
+}
+.chuzhen_tab{
+	width: 528px;
+	margin-top:15px;
+	margin-bottom: 15px;
+}
+.chuzhen_tab td{
+	width: 65px;
+	height: 30px;
+	text-align: center;
+	border: 1px solid #ccc;
+}
+.chuzhen_tab tr:first-child td{
+	background: #def1ff;
+}
+.doc_info_cont .btn_cont{
+	height: 55px;
+	background: #fafafa;
+}
+.doc_info_cont .btn_cont{
+	text-align: center;
+	padding-top: 13px;
+}
+.btn_cont>div{
+	width: 70px;
+	height: 28px;
+	display: inline-block;
+	cursor: pointer;
+}
+.add_btn{
+	background: url("../images/add_btn.png");
+}
+.del_btn{
+	background: url("../images/del_btn.png");
+}
+.sav_btn{
+	background: url("../images/sav_btn.png");
+}
+.sav_btn_b{
+	background: url("../images/sav_btn_b.png");
+}
+.refre_btn{
+	background: url("../images/refre_btn.png");
+}
+/*负责机构弹出框*/
+.resp_inst{
+	width: 506px;
+	margin-left: -253px;
+	border: 1px solid #ccc;
+	border-radius:3px;
+}
+.resp_inst_title{
+	font-size: 14px;
+	line-height: 35px;
+	text-indent: 11px;
+}
+.tree_cont{
+	height: 365px;
+	overflow: auto;
+}
+.resp_inst .btn_cont{
+	padding-top: 13px;
+	height: 55px;
+	border-top:1px solid #ebebeb;
+}
+.can_btn_b{
+	background: url("../images/can_btn_b.png");
+	margin-right: 13px;
+}
+.sav_btn_b{
+	background: url("../images/sav_btn_b.png");
+}
+/* .checkbox>td>input{
+	width: 25px;
+	
+} */

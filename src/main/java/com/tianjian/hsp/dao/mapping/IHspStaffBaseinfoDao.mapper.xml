@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tianjian.hsp.dao.IHspStaffBaseinfoDao">
+    <resultMap id="hspStaffBaseinfoForm" type="com.tianjian.hsp.bean.HspStaffBaseinfoForm"/>
+	<resultMap id="hspConfigBaseinfo" type="com.tianjian.hsp.bean.HspConfigBaseinfo"/>
+	<resultMap id="hspStaffBaseinfo" type="com.tianjian.hsp.bean.HspStaffBaseinfo"/>
+	<resultMap id="CommConfigNationality" type="com.tianjian.hsp.bean.CommConfigNationality" ></resultMap>
+	<resultMap id="CommConfig" type="com.tianjian.hsp.bean.CommConfig" ></resultMap>
+	<resultMap id="securityStaffBaseinfo" type="com.tianjian.login.model.SecurityStaffBaseinfo" ></resultMap>
+	
+	<parameterMap id="hspStaffBaseinfoBean" type="com.tianjian.hsp.bean.HspStaffBaseinfo"></parameterMap>
+	<parameterMap id="securityStaffBaseinfo" type="com.tianjian.login.model.SecurityStaffBaseinfo"></parameterMap>
+	<parameterMap id="securityLicense" type="com.tianjian.login.model.SecurityLicense" ></parameterMap>
+	<parameterMap id="securitySystemUsers" type="com.tianjian.login.model.SecuritySystemUsers" ></parameterMap>
+	<parameterMap id="securityUserVsRoles" type="com.tianjian.login.model.SecurityUserVsRoles" ></parameterMap>
+	
+	<select id="getHspInformationList"  parameterType="String" resultType="java.util.HashMap">
+	<![CDATA[
+		 select id id,item_name itemName,
+		 (SELECT wm_concat(id||'#'||item_name)  FROM  hsp.hsp_config_baseinfo hspc WHERE hspc.parent_item_code=hc.id) parentItemName
+		from hsp.hsp_config_baseinfo hc
+		 where hc.parent_item_code =#{staffHospitalCode,jdbcType=VARCHAR}
+		 group by hc.id,hc.item_name
+		]]>
+	</select>
+
+	<select id="getHspStaffInformationList" parameterType="String" resultMap="hspStaffBaseinfoForm">
+		select hs.id as hspStaffBaseinfoId,
+		hs.name name,
+		hs.id_no idNo,
+		hs.mobile_tel mobileTel,
+		s.id as securityStaffBaseinfoId,
+		hd.dept_name as deptName,
+		wm_concat(sr.id|| '#'|| sr.role_detail) as roleDetail,
+		s.staff_code as staff_code
+		from hsp.hsp_staff_baseinfo hs
+		left join hsp.HSP_DEPT_BASEINFO hd
+		on hd.dept_code = hs.related_department
+		left join security.security_staff_baseinfo s
+		on s.hsp_staff_baseinfo_id = hs.id
+		left join security.security_user_vs_roles su
+		on su.security_staff_baseinfo_id = s.id
+		left join security.security_config_roles sr
+		on sr.id = su.security_config_roles_id
+		where hs.hsp_config_baseinfo_id = #{hspConifgBaseinfoId,jdbcType=VARCHAR}
+		and sr.id|| '#'|| sr.role_detail !='#'
+		group by hs.id,hs.name,hs.id_no,
+		hs.mobile_tel,s.id,hd.dept_name,s.staff_code
+	</select>
+
+
+
+
+
+
+
+	<select id="getRoleDataList"  parameterType="String" resultMap="hspStaffBaseinfoForm">
+		select r.id as id,
+			   r.role_detail as roleDetail
+		from security.security_config_roles r
+		order by r.serial_no
+	</select>
+
+	<select id="getDeptListByHspId"  parameterType="String" resultMap="hspStaffBaseinfoForm">
+		select h.dept_code as deptCode,
+			   h.dept_name as deptName
+		from hsp.hsp_dept_baseinfo h
+		where h.hsp_config_baseinfo_id = #{staffHospitalId,jdbcType=VARCHAR}
+		
+
+	</select>
+
+	<select id="getHspConfigBaseinfo"  parameterType="String" resultMap="hspConfigBaseinfo">
+		select * from hsp.hsp_config_baseinfo t where t.id = #{tree_hspId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getHspStaffInforamtionJson"  parameterType="String" resultMap="hspStaffBaseinfoForm">
+		select s.id as securityStaffBaseinfoId,
+				s.staff_code as name,
+				s.hsp_config_baseinfo_id as hspConfigBaseinfoId,
+				h.item_name as hspConfigBaseinfoName,
+				s.comm_config_stafftype_id as idType,
+				wm_concat(u.security_config_roles_id) as id
+		from security.security_staff_baseinfo s
+		left join hsp.hsp_config_baseinfo h on h.id = s.hsp_config_baseinfo_id
+		left join security.security_user_vs_roles u on u.security_staff_baseinfo_id = s.id
+		where s.hsp_staff_baseinfo_id = #{hspStaffId,jdbcType=VARCHAR}
+		group by s.id,s.staff_code,s.hsp_config_baseinfo_id,h.item_name,s.comm_config_stafftype_id
+	</select>
+	<select id="getHspStaffBaseinfo"  parameterType="String" resultMap="hspStaffBaseinfo">
+		select * from hsp.hsp_staff_baseinfo t where t.id = #{hspStaffId,jdbcType=VARCHAR}
+	</select>
+	<select id="getCommConfigNationality"  parameterType="String" resultMap="CommConfigNationality">
+		select * from comm.comm_config_nationality t where t.item_code = #{commConfigNationalityId,jdbcType=VARCHAR}
+	</select>
+	<select id="getSexList" resultMap="CommConfig">
+		select a.item_code as itemCode,a.item_name as itemName from comm.comm_config_sex a order by a.item_code asc
+	</select>
+	<select id="getcommConfigStaffTypeList" resultMap="CommConfig">
+		select s.item_code as itemCode,s.item_name as itemName from comm.comm_config_stafftype s
+	</select>
+	 <select id="hspConfigBaseinfoIdList"  parameterType="String" resultMap="CommConfig">
+		select h.item_name as itemName,
+		       h.item_code as itemCode
+		from hsp.hsp_config_baseinfo h
+		where h.parent_item_code = #{hspConfigBaseinfoId,jdbcType=VARCHAR} 
+			  or h.item_code = #{hspConfigBaseinfoId,jdbcType=VARCHAR} 
+		order by h.item_code
+	</select>
+	
+	
+	<insert id="saveHspStaffBaseinfo" parameterMap="hspStaffBaseinfoBean">
+		insert into hsp.hsp_staff_baseinfo (
+		ID, HSP_CONFIG_BASEINFO_ID, EMP_NO, NAME, ID_NO, 
+		BIRTHDAY, COMM_CONFIG_SEX_ID, COMM_CONFIG_NATIONALITY_ID,START_WORK_DATE, 
+		OFFICE_TEL, MOBILE_TEL, COMM_DICT_PUBLIC_CHAR_ID_1, WORK_CERTIFICATE_NO, COMM_DICT_PUBLIC_CHAR_ID_2, 
+		COMM_CONFIG_POSITIONTITLE_ID, COMM_CONFIG_EMPTITLE_ID, COMM_DICT_PUBLIC_CHAR_ID_3, COMM_CONFIG_DEGREE_ID, 
+		COMM_CONFIG_DEGREE_LEVEL_ID, COMM_CONFIG_PROFESSION_ID, ISLOCATION, CREATE_DATE, CREATE_USER_ID, 
+		CREATE_USER_NAME, NAME_EN, INPUT_CODE, SECURITY_USER_BASEINFO_ID, ISEMPLOYMENT, 
+		RETIRED_DATE, ID_TYPE, RELATED_DEPARTMENT, POST_TITTLE, PROFESSIONAL_TITTLE_NAME, 
+		<!-- INNER_FILE_NUMBER, --> BDEPT_CODE, TENANT_ID)
+		values (
+		#{id,jdbcType=VARCHAR},
+		#{hspConfigBaseinfoId,jdbcType=VARCHAR},
+		#{empNo,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{idNo,jdbcType=VARCHAR},
+		#{birthday,jdbcType=DATE},
+		#{commConfigSexId,jdbcType=VARCHAR},
+		#{commConfigNationalityId,jdbcType=VARCHAR},
+		#{startWorkDate,jdbcType=DATE},
+		#{officeTel,jdbcType=VARCHAR},
+		#{mobileTel,jdbcType=VARCHAR},
+		#{commDictPublicCharId1,jdbcType=VARCHAR},
+		#{workCertificateNo,jdbcType=VARCHAR},
+		#{commDictPublicCharId2,jdbcType=VARCHAR},
+		#{commConfigPositiontitleId,jdbcType=VARCHAR},
+		#{commConfigEmptitleId,jdbcType=VARCHAR},
+		#{commDictPublicCharId3,jdbcType=VARCHAR},
+		#{commConfigDegreeId,jdbcType=VARCHAR},
+		#{commConfigDegreeLevelId,jdbcType=VARCHAR},
+		#{commConfigProfessionId,jdbcType=VARCHAR},
+		#{islocation,jdbcType=BIGINT},
+		#{createDate,jdbcType=DATE},
+		#{createUserId,jdbcType=VARCHAR},
+		#{createUserName,jdbcType=VARCHAR},
+		#{nameEn,jdbcType=VARCHAR},
+		#{inputCode,jdbcType=VARCHAR},
+		#{securityUserBaseinfoId,jdbcType=VARCHAR},
+		#{isemployment,jdbcType=BIGINT},   
+		#{retiredDate,jdbcType=DATE},
+		#{idType,jdbcType=VARCHAR},
+		#{relatedDepartment,jdbcType=VARCHAR},
+		#{postTittle,jdbcType=VARCHAR},
+		#{professionalTittleName,jdbcType=VARCHAR},
+		<!-- #{innerFileNumber,jdbcType=VARCHAR}, -->
+		#{bdeptCode,jdbcType=VARCHAR},
+		#{tenantId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="saveSecurityStaffBaseinfo" parameterMap="securityStaffBaseinfo" >
+		insert into security.security_staff_baseinfo (
+		ID, STAFF_CODE, HSP_CONFIG_BASEINFO_ID, NAME, NAME_EN, COMM_CONFIG_SEX_ID, 
+		DATE_OF_BIRTH, COMM_CONFIG_STAFFTYPE_ID, ID_NO, PHONE, ISLOCATION, 
+		COMMENTS, INPUT_CODE, CREATE_DATE, CREATE_USER_ID, CREATE_USER_NAME, 
+		SEQ_NO, HOMEPAGE_TYPE, E_MAIL, STAFF_TYPE,
+		 HSP_STAFF_BASEINFO_ID, TENANT_ID)
+		
+		values(
+		#{id,jdbcType=VARCHAR},#{staffCode,jdbcType=VARCHAR},#{hspConfigBaseinfoId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{nameEn,jdbcType=VARCHAR},#{commConfigSexId,jdbcType=VARCHAR},
+		#{dateOfBirth,jdbcType=DATE},#{commConfigStafftypeId,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{islocation,jdbcType=BIGINT},
+		#{comments,jdbcType=VARCHAR},#{inputCode,jdbcType=VARCHAR},#{ createDate,jdbcType=DATE},#{createUserId,jdbcType=VARCHAR},#{createUserName,jdbcType=VARCHAR},
+		#{seqNo,jdbcType=BIGINT},#{homePageType,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{staffType,jdbcType=BIGINT},
+		#{hspStaffBaseinfoId,jdbcType=VARCHAR},#{tenantId,jdbcType=VARCHAR}
+	
+		)
+	</insert>
+	<insert id="saveSecurityLicense" parameterMap="securityLicense" >
+		insert into security.security_license (
+		SECURITY_STAFF_BASEINFO_ID, REGIST_CODE, REG_TIME, START_TIME, STOP_DATE, COMMENTS)
+		values(
+			#{securityStaffBaseinfoId,jdbcType=VARCHAR},
+			#{registCode,jdbcType=VARCHAR},
+			#{regTime,jdbcType=DATE},
+			#{startTime,jdbcType=DATE},
+			#{stopDate,jdbcType=DATE},
+			#{comments,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="saveSecuritySystemUsers" parameterMap="securitySystemUsers" >
+	insert into security.security_system_users (
+	SECURITY_STAFF_BASEINFO_ID, PASSWD,  LICENSE_TAG)
+		values(
+			#{securityStaffBaseinfoId,jdbcType=VARCHAR},
+			#{passwd,jdbcType=VARCHAR},
+			#{licenseTag,jdbcType=BIGINT}
+		)
+	</insert>
+	
+	<insert id="saveHspStaffRoles" parameterMap="securityUserVsRoles" >
+	insert into security.security_user_vs_roles (ID, SECURITY_STAFF_BASEINFO_ID, SECURITY_CONFIG_ROLES_ID, COMMENTS)
+		values(
+			#{id,jdbcType=VARCHAR},
+			#{securityStaffBaseinfoId,jdbcType=VARCHAR},
+			#{securityConfigRolesId,jdbcType=VARCHAR},
+			#{comments,jdbcType=BIGINT}
+		)
+	</insert>
+	 <select id="getSecurityStaffBaseinfoId"  parameterType="String" resultMap="securityStaffBaseinfo">
+		select t.id from security.security_staff_baseinfo t 
+		where t.hsp_staff_baseinfo_id =#{hspStaffId,jdbcType=VARCHAR}
+	</select>
+	
+	 <delete id="delete" parameterType="String">
+    <![CDATA[
+    	delete from ${param1}  where ${param2}=#{param3,jdbcType=VARCHAR}
+    ]]>
+    	<if test="param5!=''">
+			and ${param4}=#{param5,jdbcType=VARCHAR}
+		</if>
+    </delete>
+    
+    <update id="updateHspStaffBaseinfo" parameterMap="hspStaffBaseinfoBean">
+		update hsp.hsp_staff_baseinfo set
+		    Name=#{name,jdbcType=VARCHAR},
+			Id_no=#{idNo,jdbcType=VARCHAR},
+			Comm_Config_Sex_Id=#{commConfigSexId,jdbcType=VARCHAR},
+			Birthday=#{birthday,jdbcType=DATE},
+			Hsp_Config_Baseinfo_Id=#{hspConfigBaseinfoId,jdbcType=VARCHAR},
+			Mobile_Tel=#{mobileTel,jdbcType=VARCHAR},
+			Comm_Config_Nationality_Id=#{commConfigNationalityId,jdbcType=VARCHAR},
+			Related_Department=#{relatedDepartment,jdbcType=VARCHAR}
+		where ID=#{id,jdbcType=VARCHAR}
+    </update>
+     <update id="updateSecurityStaffBaseinfo" parameterMap="securityStaffBaseinfo">
+		update security.security_staff_baseinfo
+		set
+<!-- 			staff_code=#{staffCode,jdbcType=VARCHAR}, -->
+			hsp_config_baseinfo_id=#{hspConfigBaseinfoId,jdbcType=VARCHAR},
+			comm_config_stafftype_id=#{commConfigStafftypeId,jdbcType=VARCHAR},
+			name = #{name, jdbcType=VARCHAR}
+		where ID=#{id,jdbcType=VARCHAR}
+    </update>
+    
+     <select id="checkIdCard"  parameterType="String" resultMap="securityStaffBaseinfo">
+	 <![CDATA[
+    	select * from security.security_staff_baseinfo b where upper(b.id_no)=#{param1,jdbcType=VARCHAR} 
+    	]]>
+    	<if test="param2!=''">
+			and b.id &lt;&gt;#{param2,jdbcType=VARCHAR} 
+		</if>
+	</select>
+	
+	
+	<insert id="insertStaffVsOrg">
+     insert into security.security_staff_vs_hsp(id,staff_code,hsp_code)
+     values(
+      '${id}',
+      '${staffCode}',
+   		'${hspId}'  
+     )
+
+     </insert>
+	
+	
+	
+	
+	<select id="getHspByStaffCode"  parameterType="String" resultType="java.util.HashMap">
+
+
+		 select  t.hsp_code hspCode,hsp.item_name hspName
+		from security.security_staff_vs_hsp t
+		left join hsp.hsp_config_baseinfo hsp
+		on t.hsp_code=hsp.id
+	
+		where t.staff_code ='${staffCode}'
+		order by hsp.id
+		
+		
+	</select>
+	
+	<select id="checkHspStaff"  parameterType="String" resultType="java.util.HashMap">
+		select  t.staff_code 
+		from security.security_staff_baseinfo t
+		where t.staff_code ='${staffCode}'
+	</select>
+	
+	<select id="getHspRootList"  parameterType="String" resultType="java.util.HashMap">
+		select id id,item_name itemName,item_code itemCode
+		from hsp.hsp_config_baseinfo hc
+		where hc.parent_item_code is null OR hc.parent_item_code='' 
+	</select>
+	<select id="getHspInformation"  parameterType="String" resultType="java.util.HashMap">
+		select id id,item_name itemName,item_code itemCode, hc.parent_item_code parentItemCode
+		from hsp.hsp_config_baseinfo hc
+		where hc.parent_item_code =  '${hspId}'
+	</select>
+	
+	
+    
+</mapper>

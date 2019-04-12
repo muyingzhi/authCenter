@@ -1,0 +1,14 @@
+.not-found{text-align: center;margin-top: 160px;}
+.not-found p{font-size: 18px;margin-top: 18px;margin-bottom: 20px;font-weight: bold;}
+.not-found a{display: inline-block;width: 150px;height: 35px;text-align: center;line-height: 35px;background: #03a9f5;color: #fff;border-radius: 5px;}
+.mask{position:fixed; top:0; left: 0; width:100%; height: 100%; z-index: 99;}
+.pop-up{width: 400px;height: 200px;background: #fff;margin-top: 18%;margin-left: 40%; position: relative;  z-index: 999; padding-bottom: 20px;}
+.pop-up p{line-height: 36px;padding-left: 11px;position: relative;background: #399cf3;color: #fff;}
+.pop-up p i{position: absolute;right: 0;width: 36px;height: 36px;background: url(../../images/close-white.png) center no-repeat;cursor: pointer;}
+.mask .bg{position:fixed; top:0; left: 0; width:100%; height: 100%; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20); background-color: #000; opacity: 0.2;}
+#more-sear .pop-up{width: 660px;height: 395px;margin-left: 35%;margin-top: 15%;}
+#more-sear label{display: inline-block;}
+#more-sear label input[type="radio"]{margin-right: 10px;vertical-align: top;}
+#more-sear p{text-align: center;}
+#more-sear table{width: 80%;margin: 20px auto 0;}
+#more-sear table tr td.tx-r{text-align: right;}

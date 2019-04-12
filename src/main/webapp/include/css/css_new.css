@@ -1,0 +1,62 @@
+@charset "utf-8";
+/* CSS Document */
+.pop{
+	padding:0px;
+	margin:0px;
+	}
+
+.pop_window{
+	width:295px;
+	height:182px;
+	font-size:14px;
+	margin:0 auto;   z-index: 10;
+	}
+.pop_window .pop_title{
+	height:44px;
+	background-color:#1381e7;
+	color:white;
+	line-height:44px; font-size: 20px;padding-left: 10px;
+	
+	}
+.pop_window .pop_title h1{
+   height:44px;line-height:44px; font-size: 20px;font-weight: normal;background: none; color: #fff;
+}
+.pop_window .pop_title .pop_close{
+	float:right;
+	display:inline-block;
+	width:13px;
+	height:11px;
+	background-image:url(../images/tanchukuang/cha.gif);
+	margin-right:10px;
+	margin-top:12px;
+	}
+.pop_window .pop_content{
+	box-shadow: 2px 2px 50px #ccc;
+	padding:0px;
+	background-color:#fff;
+	}
+.pop_window .pop_content table{
+	width:100%;
+	}
+.pop_window .pop_content table .info{
+	height:90px;
+	text-align:center;
+	}
+.pop_window button{
+	background:none;
+	border:none;
+	width:68px;
+	height:28px;
+	}
+.pop_window .confirm{
+	background-image:url(../images/tanchukuang/button1.gif);
+	color:white;
+	}
+.pop_window .cancel{
+	background-image:url(../images/tanchukuang/button2.gif);
+	}
+.pop_window .operation td{
+	width:50%;
+	text-align:center;
+	padding-bottom: 20px;
+	}

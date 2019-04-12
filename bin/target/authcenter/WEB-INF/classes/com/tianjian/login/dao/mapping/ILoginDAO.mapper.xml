@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tianjian.login.dao.ILoginDAO">
+
+	<resultMap type="com.tianjian.login.model.SecurityStaffBaseinfo" id="securityStaffBaseinfo"></resultMap>
+	<resultMap type="com.tianjian.login.model.SecurityLicense" id="securityLicense"></resultMap>
+	<resultMap type="com.tianjian.login.model.SecuritySystemUsers" id="SecuritySystemUsers"></resultMap>
+	<resultMap type="com.tianjian.login.model.HspConfigBaseinfo" id="HspConfigBaseinfo"></resultMap>
+	<resultMap type="com.tianjian.login.model.SecurityUserVsRoles" id="SecurityUserVsRoles"></resultMap>
+	<resultMap type="com.tianjian.login.model.SecurityConfigPublicClass" id="SecurityConfigPublicClass"></resultMap>
+	
+	<resultMap type="com.tianjian.login.model.SecurityConfigPublic" id="SecurityConfigPublic"></resultMap>
+	<resultMap type="com.tianjian.login.model.SecurityConfigMenus" id="SecurityConfigMenus"></resultMap>
+	
+	<select id="getByCode"  parameterType="String" resultMap="securityStaffBaseinfo">
+		select * from security.security_staff_baseinfo t where  t.staff_code=#{staffCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findSecurityLicenseBySsbid"  parameterType="String" resultMap="securityLicense">
+		select * from security.security_license t where t.security_staff_baseinfo_id=#{securityStaffBaseinfoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getSecuritySystemUsersBySsbid"  parameterType="String" resultMap="SecuritySystemUsers">
+		select * from security.security_system_users t
+		where t.security_staff_baseinfo_id=#{securityStaffBaseinfoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getHspConfigBaseinfoById"  parameterType="String" resultMap="HspConfigBaseinfo">
+		select * from hsp.hsp_config_baseinfo t where t.id=#{securityStaffBaseinfoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getBysecurityStaffBaseinfoId"  parameterType="String" resultMap="SecurityUserVsRoles">
+		select * from SECURITY.SECURITY_USER_VS_ROLES t where t.security_staff_baseinfo_id=#{securityStaffBaseinfoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findListByString"  parameterType="String" resultType="String">
+		select t.staff_mhistype from security.security_staff_baseinfo t where t.staff_code=#{staffCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getPublicClass" parameterType="String"  resultMap="SecurityConfigPublicClass">
+		select distinct d.* from 
+			security.security_role_vs_menus a, 
+			security.security_config_menus b, 
+			security.security_config_public c,
+			security.security_config_public_class d
+		where a.security_config_menus_id = b.id
+			and b.security_config_public_id = c.id
+			and c.scpc_id=d.id
+			and (b.is_flat_menu is null or b.is_flat_menu='')
+			and d.class_flag=${param1}
+			and d.app_sys_flag=${param2}
+			and a.security_config_roles_id in(${param3})
+		order by d.serial_no
+	</select>
+	
+	<select id="SecurityConfigPublicClass"  parameterType="String" resultMap="SecurityConfigPublicClass">
+		select * from security.security_config_public_class t where  t.staff_code=#{id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findListBySql" parameterType="String" resultType="java.util.Map">
+		${sqlstr}
+	</select>
+	
+	<select id="getPublic"  parameterType="String" resultMap="SecurityConfigPublic">
+		select distinct c.* from 
+			security.security_role_vs_menus a,security.security_config_menus b,security.security_config_public c
+		where a.security_config_menus_id = b.id 
+			and b.security_config_public_id = c.id
+			and a.security_config_roles_id in(${param2})
+		order by c.scpc_id desc,c.serial_no
+	</select>
+	<select id="getMenu"  parameterType="String" resultMap="SecurityConfigMenus">
+		select distinct a.* from
+			security.security_config_menus a, security.security_role_vs_menus b
+		where a.security_config_public_id=#{param2,jdbcType=VARCHAR}
+			and b.security_config_roles_id in(${param1})
+			and b.security_config_menus_id = a.id
+			and ((a.display_type &lt;&gt;1) or (a.display_type is null))
+			and (a.is_flat_menu is null or a.is_flat_menu = '')
+			and a.parent_id is null
+			order by a.serial_no
+	</select>
+	<select id="findByParentId"  parameterType="String" resultMap="SecurityConfigMenus">
+		select distinct a.* from
+			security.security_config_menus a,security.security_role_vs_menus b
+		where a.parent_id=${param1}
+			and b.security_config_roles_id in(${param2})
+			and b.security_config_menus_id = a.id
+			order by a.serial_no
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tianjian.security.dao.ISecurityTargetsDao">
+	<resultMap id="TargetMapping" type="com.tianjian.security.bean.Target">
+		<id column="ID" property="id" javaType="String"></id>
+		<result column="TARGET_CODE" property="code"></result>
+		<result column="TARGET_NAME" property="name"></result>
+		<result column="GROUP_CODE" property="groupCode"></result>
+		<result column="GROUP_NAME" property="groupName"></result>
+		<result column="UNIT" property="unit"></result>
+		<result column="IS_COMPLETE" property="isComplete" typeHandler="com.tianjian.util.BooleanTypeHandler"></result>
+		<result column="NOTE" property="note"></result>
+		<result column="APP_TARGET_CODE" property="appCode"></result>
+		<result column="APP_GROUP_CODE" property="appGroupCode"></result>
+		<result column="APP_GROUP_NAME" property="appGroupName"></result>
+	</resultMap>
+	<select id="get"  parameterType="String" resultMap="TargetMapping">
+		 select * from security.security_config_targets where id =#{id,jdbcType=VARCHAR}
+	</select>
+	<select id="find"  parameterType="com.tianjian.security.bean.Target" resultMap="TargetMapping">
+
+		 select * from security.security_config_targets
+		 where 1=1
+		 <if test="groupCode != '' and groupCode != null">
+			 and group_code=#{groupCode}
+		 </if>
+		<if test="appGroupCode != '' and appGroupCode!=null ">
+			and app_group_code=#{appGroupCode}
+		</if>
+
+	</select>
+	<select id="findByRole"  resultMap="TargetMapping">
+		select a.* from security.security_config_targets a,
+		security.security_role_vs_targets b
+		where a.target_code = b.target_code
+		and b.role_code IN
+		<foreach collection="roles" item="rolecode" index="index"
+				 open="(" close=")" separator=",">
+			#{rolecode}
+		</foreach>
+		and b.target_type=#{appType}
+		ORDER BY a.group_code,a.target_code
+	</select>
+</mapper>

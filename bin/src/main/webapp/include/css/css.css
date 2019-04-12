@@ -1,0 +1,69 @@
+@charset "utf-8";
+/* CSS Document */
+.pop{
+	padding:0px;
+	margin:0px;
+	}
+
+.pop_window{
+	width:295px;
+	height:182px;
+	font-size:14px;
+	margin:0 auto;
+	}
+.pop_window .pop_title{
+	height:36px;
+	background-image:url(../images/toubu.gif);
+	background-repeat:no-repeat;
+	color:white;
+	line-height:36px;
+	
+	}
+.pop_window .pop_title h1{
+   border:none;
+   background:none;
+   color:white;
+}
+.pop_window .pop_title .pop_close{
+	float:right;
+	display:inline-block;
+	width:13px;
+	height:11px;
+	background-image:url(../images/cha.gif);
+	margin-right:10px;
+	margin-top:12px;
+	}
+.pop_window .pop_title h1{
+	font-size:14px;
+	margin-left:10px;
+	} 
+.pop_window .pop_content{
+	border:1px solid #ced2d3;
+	border-top:none;
+	padding:15px;
+	background-color:#FFFFFF;
+	}
+.pop_window .pop_content table{
+	width:100%;
+	}
+.pop_window .pop_content table .info{
+	height:70px;
+	text-align:center;
+	}
+.pop_window button{
+	background:none;
+	border:none;
+	width:68px;
+	height:28px;
+	}
+.pop_window .confirm{
+	background-image:url(../images/button1.gif);
+	color:white;
+	}
+.pop_window .cancel{
+	background-image:url(../images/button2.gif);
+	}
+.pop_window .operation td{
+	width:50%;
+	text-align:center;
+	}

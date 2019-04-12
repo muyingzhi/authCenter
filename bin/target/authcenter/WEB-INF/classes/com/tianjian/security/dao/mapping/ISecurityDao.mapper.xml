@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tianjian.security.dao.ISecurityDao">
+<parameterMap id="securityConfigPublicClass" type="com.tianjian.login.model.SecurityConfigPublicClass" ></parameterMap>
+<parameterMap id="securityConfigPublic" type="com.tianjian.login.model.SecurityConfigPublic" ></parameterMap>
+<parameterMap id="securityConfigMenus" type="com.tianjian.login.model.SecurityConfigMenus" ></parameterMap>
+<parameterMap id="securityRoleVsMenus" type="com.tianjian.security.bean.SecurityRoleVsMenus" ></parameterMap>
+<resultMap id="securitySystemUsers" type="com.tianjian.login.model.SecuritySystemUsers"></resultMap>
+<resultMap id="commConfigBean" type="com.tianjian.hsp.bean.CommConfigBean"></resultMap>
+<resultMap id="securityConfigPublicClass" type="com.tianjian.login.model.SecurityConfigPublicClass"></resultMap>
+<resultMap id="securityConfigPublic" type="com.tianjian.login.model.SecurityConfigPublic"></resultMap>
+<resultMap id="securityConfigMenus" type="com.tianjian.login.model.SecurityConfigMenus"></resultMap>
+	<!-- 查询 该用户对应的所有密码信息 -->
+	<select id="findById"  parameterType="String" resultMap="securitySystemUsers">
+	<![CDATA[
+		 select * from security.security_System_users where security_Staff_Baseinfo_Id =#{userId,jdbcType=VARCHAR}
+		]]>
+	</select>
+	<!-- 更新密码 -->
+	<update id="updatePassword" parameterType="String">
+		update security.security_System_users set passwd=#{param2,jdbcType=VARCHAR} where security_Staff_Baseinfo_Id =#{param1,jdbcType=VARCHAR}
+	</update>
+	<!-- 查询 一级类别 -->
+	<select id="getRootNodes"  parameterType="String" resultType="java.util.Map">
+	<![CDATA[
+		 select a.id "id", a.class_name "className", count(b.id) "count", count(c.id) "count1" from security.security_config_public_class a left join security.security_config_public_class b on a.id = b.parent_id
+		 left join security.security_config_public c on a.id = c.scpc_id where a.level_flag='1' and a.class_flag = '1' 
+		 group by a.id, a.class_name, a.serial_no order by a.serial_no, a.id, a.class_name 
+		]]>
+	</select>
+	<!-- 查询 二级类别 -->
+	<select id="getPublicClass1ChildNodes"  parameterType="String" resultType="java.util.Map">
+	<![CDATA[
+		 select a.id "id", a.class_name "className" from security.security_config_public_class a  where a.level_flag='2' and a.class_flag = '1' 
+		  order by a.serial_no
+		]]>
+	</select>
+	<!-- 查询 模块 -->
+	<select id="getPublicClass2ChildNodes"  parameterType="String" resultType="java.util.Map">
+	<![CDATA[
+		 select a.id "id", a.reason "className" from security.security_config_public a  where a.scpc_Id =#{param1,jdbcType=VARCHAR}
+		  order by a.serial_no 
+		]]>
+	</select>
+	<!-- 查询 菜单 -->
+	<select id="getPublicChildNodes"  parameterType="String" resultType="java.util.Map">
+	<![CDATA[
+		 select a.id "id", a.menu_Detail "className" from security.Security_Config_Menus a  where a.security_Config_Public_Id =#{param1,jdbcType=VARCHAR} and a.parent_Id is null
+		  order by a.serial_no 
+		]]>
+	</select>
+	<!-- 查询 最末级菜单 -->
+	<select id="getMenuChildNodes"  parameterType="String" resultType="java.util.Map">
+	<![CDATA[
+		 select a.id "id", a.menu_Detail "className" from security.Security_Config_Menus a  where a.parent_Id =#{param1,jdbcType=VARCHAR} 
+		  order by a.serial_no 
+		]]>
+	</select>
+	<!-- 查根据条件查询菜单管理 -->
+	<select id="getSql"  parameterType="String" resultType="java.util.Map">
+	<![CDATA[
+		 ${strSql}
+		]]>
+	</select>
+	<!-- 查询 是否存在数据 -->
+	<select id="getCountById"  parameterType="String" resultType="int">
+	<![CDATA[
+		 select ${param2}  from ${param1} where ${param3}=#{param4,jdbcType=VARCHAR}
+		]]>
+	</select>
+	<!-- 查询 是否存在数据 -->
+	<select id="getByParent"  parameterType="String" resultMap="commConfigBean">
+	<![CDATA[
+		 select ${param2} "itemCode",${param3} "itemName"  from ${param1}
+		]]>
+		<if test="param5!=''">
+			and ${param4}=#{param5,jdbcType=VARCHAR}
+		</if>
+		<if test="param7!=''">
+			and ${param6}=#{param7,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 类别添加 -->
+	<insert id="addPublicClass" parameterMap="securityConfigPublicClass">
+		insert into security.security_config_public_class(
+		ID,CLASS_CODE,CLASS_NAME,INPUT_CODE,COMMENTS,PARENT_ID,LEVEL_FLAG,SERIAL_NO,
+		PIC_PATH,SYS_FLAG,REDIRECT_URL,APP_SYS_FLAG,CLASS_FLAG
+		)
+		values(              
+	  #{id,jdbcType=VARCHAR}, 
+	  #{classCode,jdbcType=VARCHAR},  
+	 #{className,jdbcType=VARCHAR},  
+	  #{inputCode,jdbcType=VARCHAR},   
+	  #{comments,jdbcType=VARCHAR},  
+	  #{parentId,jdbcType=VARCHAR}, 
+	  #{levelFlag,jdbcType=BIGINT}, 
+	  #{serialNo,jdbcType=BIGINT},
+	  #{picPath,jdbcType=VARCHAR}, 
+	  #{sysFlag,jdbcType=BIGINT}, 
+	  #{redirectUrl,jdbcType=VARCHAR},  
+	  #{appSysFlag,jdbcType=BIGINT}, 
+	  #{classFlag,jdbcType=BIGINT}
+		)
+	</insert>
+	<!-- 查询类别 是否存在数据 -->
+	<select id="findPublicClass"  parameterType="String" resultMap="securityConfigPublicClass">
+	<![CDATA[
+		 select *   from security.security_config_public_class t where id=#{idHidden,jdbcType=VARCHAR}
+		]]>
+		
+	</select>
+	<!-- 类别修改 -->
+	<update id="updatePublicClass" parameterMap="securityConfigPublicClass">
+		update security.security_config_public_class
+		set  
+	  CLASS_CODE=#{classCode,jdbcType=VARCHAR},  
+	 CLASS_NAME=#{className,jdbcType=VARCHAR},  
+	  INPUT_CODE=#{inputCode,jdbcType=VARCHAR},   
+	 COMMENTS=#{comments,jdbcType=VARCHAR},  
+	 PARENT_ID= #{parentId,jdbcType=VARCHAR}, 
+	 LEVEL_FLAG= #{levelFlag,jdbcType=BIGINT}, 
+	 SERIAL_NO= #{serialNo,jdbcType=BIGINT},
+	 PIC_PATH= #{picPath,jdbcType=VARCHAR}, 
+	 SYS_FLAG=#{sysFlag,jdbcType=BIGINT}, 
+	   REDIRECT_URL=#{redirectUrl,jdbcType=VARCHAR},  
+	 APP_SYS_FLAG= #{appSysFlag,jdbcType=BIGINT}, 
+	  CLASS_FLAG=#{classFlag,jdbcType=BIGINT}
+		where ID=#{id,jdbcType=VARCHAR}
+	</update>
+	<!-- 查询 模块是否存在数据 -->
+	<select id="findPublicBean"  parameterType="String" resultMap="securityConfigPublic">
+	<![CDATA[
+		 select *   from security.security_config_public t where id=#{idHidden,jdbcType=VARCHAR}
+		]]>
+		
+	</select>
+	<!-- 模块修改 -->
+	<update id="updatePublic"  parameterMap="securityConfigPublic">
+		update security.security_config_public
+		set  
+	  MOD_CODE=#{modCode,jdbcType=VARCHAR},  
+	 SCPC_ID=#{scpcId,jdbcType=VARCHAR},  
+	  REASON=#{reason,jdbcType=VARCHAR},   
+	 REASON_VALUE=#{reasonValue,jdbcType=VARCHAR},  
+	 INPUT_CODE= #{inputCode,jdbcType=VARCHAR}, 
+	 COMMENTS= #{comments,jdbcType=VARCHAR}, 
+	 SERIAL_NO= #{serialNo,jdbcType=BIGINT},
+	 PIC_PATH= #{picPath,jdbcType=VARCHAR}, 
+	  PUBLIC_URL=#{publicUrl,jdbcType=VARCHAR},  
+	 PUBLIC_TARGET= #{publicTarget,jdbcType=VARCHAR}
+	 where id=#{id,jdbcType=VARCHAR}
+	</update>
+	<!-- 模块修改 -->
+	<insert id="addPublic" parameterMap="securityConfigPublic">
+		insert into security.security_config_public(
+		id,MOD_CODE, SCPC_ID,REASON,REASON_VALUE,INPUT_CODE,COMMENTS,
+		SERIAL_NO,PIC_PATH,PUBLIC_URL,PUBLIC_TARGET
+		)
+		values(
+		#{id,jdbcType=VARCHAR},
+	  #{modCode,jdbcType=VARCHAR},  
+	  #{scpcId,jdbcType=VARCHAR},  
+	  #{reason,jdbcType=VARCHAR},   
+	 #{reasonValue,jdbcType=VARCHAR},  
+	 #{inputCode,jdbcType=VARCHAR}, 
+	 #{comments,jdbcType=VARCHAR}, 
+	 #{serialNo,jdbcType=BIGINT},
+	 #{picPath,jdbcType=VARCHAR}, 
+	 #{publicUrl,jdbcType=VARCHAR},  
+	 #{publicTarget,jdbcType=VARCHAR}
+	)
+	</insert>
+	<!-- 查询 菜单是否存在数据 -->
+	<select id="findMenusById"  parameterType="String" resultMap="securityConfigMenus">
+	<![CDATA[
+		 select *   from security.security_config_menus t where id=#{idHidden,jdbcType=VARCHAR}
+		]]>
+		
+	</select>
+	<!-- 菜单修改 -->
+	<update id="updateMenus"  parameterMap="securityConfigMenus">
+		update security.security_config_Menus
+		set  
+	  SECURITY_CONFIG_PUBLIC_ID=#{securityConfigPublicId,jdbcType=VARCHAR},  
+	 MENU_CODE=#{menuCode,jdbcType=VARCHAR},  
+	  PARENT_ID=#{parentId,jdbcType=VARCHAR},   
+	 MENU_DETAIL=#{menuDetail,jdbcType=VARCHAR},  
+	 MENU_NOTICE= #{menuNotice,jdbcType=VARCHAR}, 
+	 MENU_URL= #{menuUrl,jdbcType=VARCHAR}, 
+	 END_LEVEL_FLAG= #{endLevelFlag,jdbcType=BIGINT},
+	 MENU_LEVEL= #{menuLevel,jdbcType=BIGINT},
+	 MENU_SEQ= #{menuSeq,jdbcType=BIGINT},
+	 MENU_ICON= #{menuIcon,jdbcType=VARCHAR}, 
+	  MENU_DATA=#{menuData,jdbcType=VARCHAR},  
+	 MENU_TARGET= #{menuTarget,jdbcType=VARCHAR},
+	 MENU_METHOD= #{menuMethod,jdbcType=VARCHAR},
+	 comments= #{comments,jdbcType=VARCHAR},
+	 SERIAL_NO= #{serialNo,jdbcType=BIGINT},
+	 IS_FLAT_MENU= #{isFlatMenu,jdbcType=VARCHAR},
+	 INPUT_CODE= #{inputCode,jdbcType=VARCHAR},
+	 DISPLAY_TYPE= #{displayType,jdbcType=BIGINT},
+	 MENU_TYPE= #{menuType,jdbcType=BIGINT}
+	 where id=#{id,jdbcType=VARCHAR}
+	</update>
+	<!-- 菜单添加 -->
+	<insert id="addMenus"  parameterMap="securityConfigMenus">
+		insert into security.security_config_Menus(
+		ID,SECURITY_CONFIG_PUBLIC_ID,MENU_CODE,PARENT_ID,MENU_DETAIL,MENU_NOTICE,MENU_URL,
+		END_LEVEL_FLAG,MENU_LEVEL,MENU_SEQ,MENU_ICON,MENU_DATA,MENU_TARGET,MENU_METHOD,COMMENTS,
+		SERIAL_NO,IS_FLAT_MENU,INPUT_CODE,MENU_TYPE,DISPLAY_TYPE
+		)
+		values(
+		#{id,jdbcType=VARCHAR},  
+	  #{securityConfigPublicId,jdbcType=VARCHAR},  
+	 #{menuCode,jdbcType=VARCHAR},  
+	 #{parentId,jdbcType=VARCHAR},   
+	 #{menuDetail,jdbcType=VARCHAR},  
+	 #{menuNotice,jdbcType=VARCHAR}, 
+	 #{menuUrl,jdbcType=VARCHAR}, 
+	 #{endLevelFlag,jdbcType=BIGINT},
+	 #{menuLevel,jdbcType=BIGINT},
+	 #{menuSeq,jdbcType=BIGINT},
+	 #{menuIcon,jdbcType=VARCHAR}, 
+	 #{menuData,jdbcType=VARCHAR},  
+	 #{menuTarget,jdbcType=VARCHAR},
+	 #{menuMethod,jdbcType=VARCHAR},
+	 #{comments,jdbcType=VARCHAR},
+	 #{serialNo,jdbcType=BIGINT},
+	 #{isFlatMenu,jdbcType=VARCHAR},
+	 #{inputCode,jdbcType=VARCHAR},
+	 #{menuType,jdbcType=BIGINT},
+	 #{displayType,jdbcType=BIGINT}
+	)
+	</insert>
+	<!-- 添加角色对应菜单功能 -->
+	<insert id="saveRoleVsMenus"  parameterMap="securityConfigMenus">
+		insert into security.security_role_vs_menus(
+		ID,SECURITY_CONFIG_ROLES_ID,SECURITY_CONFIG_MENUS_ID
+		)
+		values(
+		#{id,jdbcType=VARCHAR},  
+	  #{securityConfigRolesId,jdbcType=VARCHAR},  
+	 #{securityConfigMenusId,jdbcType=VARCHAR}
+	)
+	</insert>
+	
+	
+	
+	
+	
+	<select id="findGroupTarget"  parameterType="String" resultType="java.util.Map">
+		<![CDATA[
+		
+		
+SELECT DISTINCT group_code  id,group_name name 
+FROM security.security_config_targets
+WHERE group_code is not null and not group_code = ''
+ORDER BY id
+		]]>
+	</select>
+	
+	
+	
+		<select id="findAPPGroupTarget"  parameterType="String" resultType="java.util.Map">
+		<![CDATA[
+		
+		
+SELECT DISTINCT app_group_code  id,app_group_name name   
+FROM security.security_config_targets 
+  WHERE app_group_code IS NOT NULL and not app_group_code =''
+
+ORDER BY id
+		]]>
+	</select>
+	
+	
+	
+	
+	
+		<select id="findTargetByGroup"  parameterType="String" resultType="java.util.Map">
+		<![CDATA[
+		
+		
+SELECT DISTINCT 
+  CONCAT('PC_' ,target_code)  id,
+  target_name name,
+  group_code pId 
+FROM
+  security.security_config_targets 
+where group_code='${groupCode}'
+ORDER BY id 
+
+		]]>
+	</select>
+	
+		<select id="findAPPTargetByGroup"  parameterType="String" resultType="java.util.Map">
+		<![CDATA[
+		
+		
+SELECT DISTINCT 
+  CONCAT('APP_' ,app_target_code)  id,
+  target_name name,
+  app_group_code pId 
+FROM
+  security.security_config_targets 
+where app_group_code='${groupCode}'
+ORDER BY id 
+
+		]]>
+	</select>
+	
+	
+	
+	
+	<insert id="saveRoleVsTarget">
+     insert into security.security_role_vs_targets(id,role_code,target_code,target_type)
+     values(
+      '${id}',
+      '${roleCode}',
+   		'${targetCode}' ,
+   		'${targetType}'  
+   		
+     )
+
+     </insert>
+	
+	
+	
+	
+		<select id="getGroupTargetByRoles"  parameterType="String" resultType="java.util.Map">
+		<![CDATA[
+		
+		
+SELECT DISTINCT ta.group_code ,ta.group_name   FROM security.security_role_vs_targets t
+ JOIN security.security_config_targets ta
+ ON  t.target_code=ta.target_code
+   WHERE t.role_code in  ${roleId}
+   and t.target_type= #{targetType}
+   order by group_code
+
+		]]>
+	</select>
+	
+		
+		<select id="getTargetByRoles"  parameterType="String" resultType="java.util.Map">
+		<![CDATA[
+		
+		
+SELECT DISTINCT t.target_code,ta.target_name  
+  FROM security.security_role_vs_targets t
+ JOIN security.security_config_targets ta
+ ON  t.target_code=ta.target_code
+   WHERE t.role_code in  ${roleId} 
+   and ta.group_code='${groupCode}'
+   and t.target_type= #{targetType}
+   order by target_code
+
+		]]>
+	</select>
+	
+	
+		<select id="getMenusByRoles"  parameterType="String" resultType="java.util.Map">
+
+		
+		SELECT DISTINCT 
+  t.security_config_menus_id id,
+  ta.menu_detail menuDetail,
+    ta.menu_url menuUrl,
+    ta.MENU_TYPE menuType 
+  
+FROM
+  security.security_role_vs_menus t 
+  JOIN security.security_config_menus ta 
+    ON t.security_config_menus_id=ta.id
+WHERE t.security_config_roles_id IN  ${roleId} 
+ORDER BY security_config_menus_id 
+		
+
+	
+	</select>
+	
+	
+	
+	
+	
+	
+</mapper>

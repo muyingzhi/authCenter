@@ -1,0 +1,163 @@
+@charset "utf-8";
+/* CSS Document */
+*{
+	padding:0px;
+	margin:0px;
+	text-decoration:none;
+	list-style-type:none;
+	background-repeat:no-repeat;
+	outline:none;
+	font-family:"Microsoft YaHei", Arial;
+	}
+	body{
+		background-color: #fafafa;
+	}
+img{vertical-align: middle;}
+#content h2{  line-height: 35px; margin: 0; padding: 0;    font-size: 14px;  color: #333; border-bottom: 1px solid #cccccc;}
+#head{
+	font-size:13px;
+	margin:30px 10px;
+	}
+#head span{
+	color:#0088ff;
+	}
+#head img{
+	margin:0px 3px;
+	}
+#content{
+	width:95%;
+	margin:0px auto 10px;
+	font-size:12px;
+	color:#333;
+	overflow:hidden;
+	}
+
+.examTime{
+	height:25px;
+	line-height:25px;
+	border:1px solid #ccc;
+	width:120px;
+	vertical-align: middle;
+	background-color: #fff;
+	}
+	#content label.date{position: relative;}
+	#content label.date img{position: absolute; right: 11px; top: 2px;}
+#content .datePick{
+	display:inline-block;
+	width:17px;
+	height:23px;
+	background-image:url(../../images/businessFunctions/datePick_bg.jpg);
+	position:relative;
+	top:7px;
+	margin-left:7px;
+	cursor:pointer;
+	margin-right:7px;
+	}
+#content>div>div{
+	padding:5px;
+	overflow:hidden;
+	font-size: 13px;
+	}
+#content>div>div div{
+	float:left;
+	margin-right:15px;
+	padding:5px;
+	}
+#content .examNum{
+	width:122px;
+	margin-right:10px;
+	height:27px;
+	padding-bottom:4px;
+	border:1px solid #c2c2c2;
+	vertical-align: middle;
+	}
+#content .residentsType{
+	width:144px;
+	height:27px;
+	border:1px solid #c2c2c2;
+	}
+#content .disease{
+	margin-top:5px;
+	}
+#content .disease label{
+	margin-right:10px;
+	}
+#content .disease input{
+	position:relative;
+	top:3px;
+	}
+#content #add{
+	float:right;
+	margin-right:10px;
+	}
+#content #store{
+	float:right;
+	margin-right:30px;
+}	
+#content #add a{
+	display:inline-block;
+	width:70px;
+	height:28px;
+	background-image:url(../../images/businessFunctions/addnormal.gif);
+	}
+#content #store a{
+	display:inline-block;
+	width:70px;
+	height:28px;
+	background-image:url(../../images/businessFunctions/store.jpg);
+}	
+#content #add a:hover{
+	background-image:url(../../images/businessFunctions/adddown.gif);
+	}
+#content .results h1{
+	border:none;
+	background:none;
+	color:#1f8ed6;
+	margin:0px;
+	}
+#content table{
+	width:100%; border-collapse: collapse;
+	
+	}
+#content table thead{
+	background-color:#e0f0f4;
+	
+	}
+table td{
+	padding:10px 5px;
+	text-align:center;
+	font-size:12px;
+	}
+#content table tbody tr:nth-last-of-type(odd){background-color: #f8f8f8;}	
+#content table td img{
+	margin:0 3px;
+	cursor:pointer;
+	}
+#content table .even td{
+	background-color:#F1F7FC;
+	}
+#page{
+	font-size:13px;
+	text-align:center;
+	margin-top:20px;
+	}
+#page span{
+	position:relative;
+	top:5px;
+	margin-left:5px;
+	margin-right:3px;
+	cursor:pointer;
+	}
+
+#page input{
+	width:50px;
+	margin-right:2px;
+	}
+.paging{ text-align:center; margin:20px 0;}
+			.paging .bb, .paging a{ padding: 5px 10px; margin:0 25px;  border:1px solid #d8d8d8;  color:#888; border-radius:2px; font-size:14px;}
+			.paging a:hover, .paging a.curr{padding:6px 11px; background:#3b8cff; color:#fff; text-decoration:none;border-radius:2px;border: none;}
+			.paging a{margin: 0 3px;}
+			.paging .bb:hover{background:#3b8cff;}	
+#_tp {
+	vertical-align: middle;
+}

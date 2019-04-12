@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - StringCompare",
+            "request": "launch",
+            "mainClass": "com.tianjian.util.StringCompare",
+            "projectName": "HELP_DSS"
+        }
+    ]
+}

@@ -1,0 +1,92 @@
+@charset "utf-8";
+html,body {
+	-webkit-touch-callout:none;
+	-webkit-text-size-adjust:none;
+	-webkit-tap-highlight-color:transparent;
+	-webkit-user-select:none;
+	-webkit-overflow-scrolling: touch
+}
+body{
+	margin:0px;
+	padding:0px;
+	width: 80%;
+	font-family: "宋体";
+}
+a{
+	text-decoration: none;
+	cursor: pointer;
+}
+a:hover{
+	text-decoration: none;
+}
+
+a:active{
+	text-decoration: none;
+}
+p,h1,h2,h3,h4,h5,h6,ul,li,dl,dt,dd{
+	margin:0px;
+	padding:0px;
+	list-style:none;
+}
+a img{
+	border: none;
+}
+a,button:focus {
+	outline: 0;
+}
+input,textarea{
+	-webkit-tap-highlight-color:transparent;
+	font-family: "黑体";
+	-webkit-appearance: none;
+}
+
+input,textarea:focus{
+	outline: none;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+li{
+	list-style: none;
+}
+button{
+	border: none;
+	cursor: pointer;
+	background-color: #43b3e5;
+	color: #FFFFFF;
+	border-radius: 4px;
+	background-repeat:no-repeat ;
+}
+.pointer{
+	cursor: pointer;
+}
+
+button.gr{
+	background-color:#61e99f ;
+}
+.clear:after{
+	clear: both;
+	content: '';
+	display: block;
+}
+em,del,strong,var,label,cite,small,time,mark,code,textarea{
+	display:block;
+}
+.lf{
+	float: left;
+}
+.rt{
+	float: right;
+}
+table{
+	border-collapse: collapse;
+}

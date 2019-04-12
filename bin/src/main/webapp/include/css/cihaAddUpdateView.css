@@ -1,0 +1,296 @@
+/*Overall situation css yang shi*/
+html,body {
+   margin:0;
+   padding:0;
+   font-size:13px;
+   overflow-y:auto;
+}
+body *{
+   margin:0;
+   padding:0;
+   font-size:13px;
+   
+}
+table{
+	background-color:white;
+	}
+.input{
+	border:0;
+	border-bottom:1px solid #000000;
+	color:#0060BF;
+	font-size:13px;
+	height:14px;
+	line-height:14px;
+	padding-top:2px;
+	
+}
+textarea{
+	color:#0060BF;
+	line-height:20px;
+}
+
+/*add table yang shi*/
+.biaoti_nav{	
+	height:33px;
+	font-weight:bold;
+	text-align:center;
+	background-image:url(/include/imagesh2_bg.jpg);
+	background-repeat:repeat-x;
+	color:#4d494a;
+	border-bottom:1px solid #dedede;
+}
+.tableViewSpe{
+	width:85%;
+	border:1px solid #dedede;
+	margin:0 auto;
+	margin-bottom:10px;
+	
+	}
+.tableView{
+	width:85%;
+	background-color:#dedede;
+	margin:0 auto;
+	margin-bottom:10px;
+	border:1px solid  #dedede;
+	
+}
+.tableView tr{
+	background-color:#ffffff;
+}
+.tdLeft_L{
+	padding-top:5px;
+	height:30px;
+	line-height:30px;
+	text-align:right;
+}
+.tdRight_R{
+	padding-top:5px;
+	height:30px;
+	line-height:30px;
+	text-align:left;	
+	padding-left:8px;	
+}
+.colorRed{
+	color:#ff0000;
+}
+.tdLeft{
+	height:30px;
+	line-height:30px;
+	text-align:right;
+}
+.tdRight{
+	height:30px;
+	line-height:30px;
+	text-align:left;	
+	padding-left:8px;
+	
+}
+/*duo ge xuan xiang yang shi*/
+.selectFull,.selectFull2{
+    width:100%;
+	background-color:white;
+	padding-bottom:15px;
+	
+}
+
+.selectDiv,.selectDiv2{
+	display:block;
+    color:#0b84d7;
+	font-weight:bold;
+	
+}
+.selectDiv span,.selectDiv2 span{
+	display:block;
+	padding-top:10px;
+	padding-left:15px;
+}
+.selectM,.selectM2{
+	display:block;
+	border:1px solid #AACBEE;
+	padding:10px 0px 5px 0px;
+	margin:0 15px;
+	margin-top:10px;
+	
+}
+.selectM span,.selectM2 span{
+	height:30px;
+	line-height:30px;
+	margin-left:10px;
+	display:inline-block;
+}
+.cancel{
+	background:url(../images/quxiao.gif) no-repeat 0px 0px;
+	width:16px;
+	height:16px;
+	border:0;
+	margin-left:10px;
+	margin-bottom:2px!important;
+	margin-bottom:12px;
+	cursor:pointer;
+}
+
+
+/*add delect list yang shi*/
+
+.addDiv,.addDiv2{
+	width:806px;	
+	border:1px solid #828283;
+	margin:5px 0px 0px 5px;	
+}
+.addDiv2{
+	width:827px;
+}
+.addDiv h4,.addDiv2 h4{	
+	height:25px;
+	border-bottom:1px solid #828283;
+	background-color:#cccccc;
+	background:url(../images/bg.gif) repeat-x 0 0;
+	color:#000000;
+	font-size:13px;
+	line-height:25px;
+	padding-left:10px;
+	margin:0;
+}
+.addDiv h4 .span_1,.addDiv h4 .span_2,.addDiv h4 .span_3,.addDiv2 h4 .span_1,.addDiv2 h4 .span_2,.addDiv2 h4 .span_3{
+	background:url(../../../include/images/Forum_nav.gif) no-repeat 0 4px;
+	color:#000000;	
+	cursor:pointer;
+	display:block;
+	width:160px;
+	padding-left:20px;
+	height:20px;
+	line-height:20px;
+	float:left;
+	margin-top:5px;
+	font-weight:normal;
+}
+.addDiv h4 .span_2,.addDiv2 h4 .span_2{
+	background:url(../../../include/images/add_list.jpg) no-repeat 0 0px;	
+	width:75px;	
+}
+.addDiv h4 .span_3,.addDiv2 h4 .span_3{
+	background:url(../../../include/images/del_list.jpg) no-repeat 0 0px;
+	width:30px;
+}
+.addList tr td{
+	height:30px;
+}
+
+/*date input yang shi*/
+
+.input_year{
+	width:40px;
+}
+.input_math{
+	width:25px;
+}
+
+/*table textarea yang shi*/
+
+.textareaTable,.yinshiTable{
+	width:85%;
+	margin-top:10px;
+	border:1px solid #dedede;
+	
+	
+}
+.textareaTableSpe{
+	background-color:#AACBEE;
+	border:none;
+	}
+.spe .textareaTable{
+	background-color:#AACBEE;
+	border:none;
+	width:98%;
+	} 
+.spe .textareaTable td{
+	background-color:white;
+	}
+.textareaTableSpe td{
+	
+	background-color:white;
+	}
+.textareaTable tr.textareaTr h4{
+	height:25px;
+	margin:0;
+	padding:0;
+	line-height:25px;
+	padding-left:20px;
+	text-align:left;	
+	color:#0c82d9;
+	padding-top:10px;
+}
+.textareaTd{
+	text-align:left; 
+	padding: 10px 0px 10px 10px;
+	padding-left:20px;
+	
+}
+.contentTd{
+	text-align:left; 
+	padding:10px;
+	line-height:20px;
+	height:30px;
+	min-height:30px;
+	color:#0060BF;
+	word-break: break-all;
+}
+/*div button yang shi*/
+
+.buttonDiv{
+	width:808px;
+	height:30px; 
+	margin-top:10px; 
+	text-align:center;
+	clear:both;
+	}
+.button{
+	width:50px;
+	height:23px;
+	line-height:23px;
+	background-image:url(../images/tong.gif);
+	border:0;
+	cursor:hand;
+	font-size:12px;	
+}
+/*foot date doctor yang shi*/
+.date_doctor{
+	
+	text-align:right;
+	margin-right:20px;
+}
+.date_doctor2{
+	text-align:right;
+	margin-right:20px;
+}
+.shenhe,.shenhetwo{
+	width:827px;
+	border:1px solid #828283;
+	height:25px; 
+	line-height:25px; 
+	background:url(../../../include/images/bg.gif) repeat-x 0 0; 
+	margin:0 auto;
+	margin-top:5px; 
+	padding:0; 
+	text-align:center;
+}
+.shenhetwo{
+	width:806px;
+}
+#displaydiv{
+	z-index:10;
+	display:none;
+	background-color:#ffffff;
+	position:absolute;
+	top:0; left:0;
+	border:1px solid #333333;
+	background-color:#cccccc;			
+}
+#checkdiv{
+	border:1px solid #999999; width:783px; height:75px; color:#0060bf; line-height:20px; overflow:auto; margin:0px 10px 0px 0px; padding:0;
+}
+.tdRightR{
+	padding:10px 0px;
+	padding-left:30px;
+	
+	}

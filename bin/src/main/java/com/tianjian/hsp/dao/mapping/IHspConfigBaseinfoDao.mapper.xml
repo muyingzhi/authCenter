@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tianjian.hsp.dao.IHspConfigBaseinfoDao">
+<parameterMap id="hspConfigBaseinfo" type="com.tianjian.hsp.bean.HspConfigBaseinfo" />
+<parameterMap id="hspDeptBaseinfo" type="com.tianjian.hsp.bean.HspDeptBaseinfo" />
+
+<resultMap id="hspConfigBaseinfo" type="com.tianjian.hsp.bean.HspConfigBaseinfo"></resultMap>
+<resultMap id="commConfigBean" type="com.tianjian.hsp.bean.CommConfigBean"></resultMap>	
+<resultMap id="hspDeptBaseinfo" type="com.tianjian.hsp.bean.HspDeptBaseinfo"></resultMap>
+
+
+	<select id="getById"  resultMap="hspConfigBaseinfo">
+		select *
+		from hsp.hsp_config_baseinfo hsp
+		WHERE id = #{id}
+	</select>
+	<select id="getHospital"   resultType="java.util.HashMap">
+	<![CDATA[
+		 select hsp.id id,hsp.item_code itemCode,hsp.item_name itemName,parent_item_code, '' type 
+
+		from hsp.hsp_config_baseinfo hsp
+		
+		
+		 
+		
+		]]>
+	</select>
+
+
+
+	<!-- 查询 下级机构的ID，名称以及该机构对应的科室 -->
+	<select id="getHspInformationList"  parameterType="String" resultType="java.util.HashMap">
+	<![CDATA[
+		 select id id,item_name itemName,
+		 (SELECT wm_concat(id||'#'||item_name)  FROM  hsp.hsp_config_baseinfo hspc WHERE hspc.parent_item_code=hc.id) parentItemName
+		from hsp.hsp_config_baseinfo hc
+		 where hc.parent_item_code =#{staffHospitalCode,jdbcType=VARCHAR}
+		 group by hc.id,hc.item_name
+		
+		]]>
+	</select>
+	<!-- 查询 科室的代码跟名称 -->
+	<select id="getNowHspDeptList"  parameterType="String" resultType="java.util.HashMap">
+	<![CDATA[
+		select hd.dept_code "deptCode",hd.dept_name "deptName" from hsp.hsp_dept_baseinfo hd where hd.hsp_config_baseinfo_id =#{staffHospitalId,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+
+	
+	
+	
+	<!-- 查询 机构对应的详细信息 -->
+	<select id="getHspConfigBaseinfo"  parameterType="String" resultMap="hspConfigBaseinfo">
+	<![CDATA[
+		select * from hsp.hsp_config_baseinfo t where t.id =#{id,jdbcType=VARCHAR}
+		]]>
+	</select>
+	<!-- 通用查询字典中某个值 -->
+	<select id="getNameById"  parameterType="String" resultType="String">
+	<![CDATA[
+		select ${param2} from ${param1}  where ${param3} =#{param4,jdbcType=VARCHAR}
+		]]>
+	</select>
+	<!-- 通用查询字典的代码跟字段名 -->
+	<select id="findByBean"  parameterType="String" resultMap="commConfigBean">
+	<![CDATA[
+		select ${param2} "seqNo",${param3} "itemName" from ${param1}  order by ${param2} asc
+		]]>
+	</select>
+	<!-- 查询地区字典的代码跟名称 -->
+	<select id="getByParent"  parameterType="String" resultMap="commConfigBean">
+	<![CDATA[
+		select ${param2} "itemCode",${param3} "itemName" from ${param1} t where 1=1  
+		]]>
+		<if test="param5!=''">
+			and ${param4}=#{param5,jdbcType=VARCHAR}
+		</if>
+		<if test="param6!=''">
+			and level_Flag=#{param6,jdbcType=VARCHAR}
+		</if>
+		<![CDATA[
+		order by t.seq_no
+		]]>
+		
+		
+		
+	</select>
+	<!-- 查询机构的最大seqNo -->
+	<select id="seqNoMaker"   resultType="Long">
+	<![CDATA[
+		select max(seq_no) from hsp.hsp_config_baseinfo
+		]]>
+	</select>
+	<select id="getP2ValueByP1"  parameterType="String" resultType="String">
+	<![CDATA[
+		select level_Desc from hsp.hsp_config_baseinfo where id=#{blank,jdbcType=VARCHAR}
+		]]>
+	</select>
+	<update id="update" parameterMap="hspConfigBaseinfo">
+	update hsp.hsp_config_baseinfo set
+        ITEM_CODE=#{itemCode,jdbcType=VARCHAR},                
+	  ITEM_NAME=#{itemName,jdbcType=VARCHAR}, 
+	  PARENT_ITEM_CODE=#{parentItemCode,jdbcType=VARCHAR},  
+	  PARENT_ITEM_NAME=#{parentItemName,jdbcType=VARCHAR},  
+	  CCHT_NAME=#{cchtName,jdbcType=VARCHAR},   
+	  COMM_CONFIG_FT_MANAGE_ID=#{commConfigFtManageId,jdbcType=VARCHAR},  
+	  COMM_CONFIG_FT_MANAGE_NAME=#{commConfigFtManageName,jdbcType=VARCHAR},  
+	  COMM_CONFIG_ECONKIND_ID=#{commConfigEconkindId,jdbcType=VARCHAR},  
+	  COMM_CONFIG_ECONKIND_NAME=#{commConfigEconkindName,jdbcType=VARCHAR},   
+	  COMM_CONFIG_LOCATION_ID_1=#{commConfigLocationId1,jdbcType=VARCHAR},  
+	  COMM_CONFIG_LOCATION_NAME_1=#{commConfigLocationName1,jdbcType=VARCHAR},  
+	  COMM_CONFIG_LOCATION_ID_2=#{commConfigLocationId2,jdbcType=VARCHAR},  
+	  COMM_CONFIG_LOCATION_NAME_2=#{commConfigLocationName2,jdbcType=VARCHAR}, 
+	  COMM_CONFIG_LOCATION_ID_3=#{commConfigLocationId3,jdbcType=VARCHAR},  
+	  COMM_CONFIG_LOCATION_NAME_3=#{commConfigLocationName3,jdbcType=VARCHAR}, 
+	  COMM_CONFIG_LOCATION_TOWN_ID=#{commConfigLocationTownId,jdbcType=VARCHAR},  
+	  CCLT_NAME=#{ccltName,jdbcType=VARCHAR},    
+	  COMM_CLV_ID=#{commClvId,jdbcType=VARCHAR},   
+	  COMM_CLV_NAME=#{commClvName,jdbcType=VARCHAR},    
+	  COMM_CONFIG_UNITTYPE_ID=#{commConfigUnittypeId,jdbcType=VARCHAR},   
+	  COMM_CONFIG_UNITTYPE_NAME=#{commConfigUnittypeName,jdbcType=VARCHAR},   
+	  COMM_CONFIG_UNITGRADE_ID=#{commConfigUnitgradeId,jdbcType=VARCHAR},    
+	  COMM_CONFIG_UNITGRADE_NAME=#{commConfigUnitgradeName,jdbcType=VARCHAR},  
+	  COMM_CONFIG_HOSPITAL_TYPE_ID=#{commConfigHospitalTypeId,jdbcType=VARCHAR},   
+	  ADDRESS=#{address,jdbcType=VARCHAR},   
+	  ZIPCODE=#{zipcode,jdbcType=VARCHAR},   
+	  CONTACT_PERSON_NAME=#{contactPersonName,jdbcType=VARCHAR},    
+	  PHONE=#{phone,jdbcType=VARCHAR},   
+	  DATE_CLINIC_NUM=#{dateClinicNum,jdbcType=BIGINT},   
+	  YEAR_OUTHOSPITAL_NUM=#{yearOuthospitalNum,jdbcType=BIGINT},   
+	  AUTHORIZED_BED_NUM=#{authorizedBedNum,jdbcType=BIGINT},   
+	  OUTSPREAD_BED_NUM=#{outspreadBedNum,jdbcType=BIGINT},        
+	  DOCTOR_NUM=#{doctorNum,jdbcType=BIGINT},       
+	   NURSE_NUM=#{nurseNum,jdbcType=BIGINT},       
+	   TECHNIC_PERSON_NUM=#{technicPersonNum,jdbcType=BIGINT},       
+	   SICKROOM_NUM=#{sickroomNum,jdbcType=BIGINT},        
+	   OPERATIONROOM_NUM=#{operationroomNum,jdbcType=BIGINT},       
+	   INPUT_CODE=#{inputCode,jdbcType=VARCHAR},       
+	   SEQ_NO=#{seqNo,jdbcType=BIGINT},       
+	  COMMENTS=#{comments,jdbcType=VARCHAR},  
+	  LEVEL_DESC=#{levelDesc,jdbcType=VARCHAR}, 
+	  E_MAIL=#{EMail,jdbcType=VARCHAR}, 
+	  DOMAIN_NAME=#{domainName,jdbcType=VARCHAR},  
+	  CREATE_DATE=#{createDate,jdbcType=DATE}, 
+	  CREATE_USER_ID=#{createUserId,jdbcType=VARCHAR}, 
+	  CREATE_USER_NAME=#{createUserName,jdbcType=VARCHAR}, 
+	  COMM_CONFIG_SETTYPE_ID=#{commConfigSettypeId,jdbcType=VARCHAR},  
+	  COMM_CONFIG_GOVAFFRS_ID=#{commConfigGovaffrsId,jdbcType=VARCHAR}
+	 where ID=#{id,jdbcType=VARCHAR}     
+    </update>
+    
+ 
+    
+    <insert id="add" parameterMap="hspConfigBaseinfo">
+	insert into hsp.hsp_config_baseinfo(id,ITEM_CODE,ITEM_NAME,PARENT_ITEM_CODE,PARENT_ITEM_NAME,CCHT_NAME,COMM_CONFIG_FT_MANAGE_ID,COMM_CONFIG_FT_MANAGE_NAME,
+	COMM_CONFIG_ECONKIND_ID,COMM_CONFIG_ECONKIND_NAME,COMM_CONFIG_LOCATION_ID_1,COMM_CONFIG_LOCATION_NAME_1,COMM_CONFIG_LOCATION_ID_2,
+	COMM_CONFIG_LOCATION_NAME_2,COMM_CONFIG_LOCATION_ID_3,COMM_CONFIG_LOCATION_NAME_3,COMM_CONFIG_LOCATION_TOWN_ID,CCLT_NAME,
+COMM_CLV_ID,COMM_CLV_NAME,COMM_CONFIG_UNITTYPE_ID,COMM_CONFIG_UNITTYPE_NAME,COMM_CONFIG_UNITGRADE_ID,COMM_CONFIG_UNITGRADE_NAME,
+COMM_CONFIG_HOSPITAL_TYPE_ID,ADDRESS,ZIPCODE,CONTACT_PERSON_NAME,PHONE,DATE_CLINIC_NUM,YEAR_OUTHOSPITAL_NUM,AUTHORIZED_BED_NUM,
+OUTSPREAD_BED_NUM,DOCTOR_NUM,NURSE_NUM,TECHNIC_PERSON_NUM,SICKROOM_NUM,OPERATIONROOM_NUM,INPUT_CODE,SEQ_NO,COMMENTS,
+LEVEL_DESC,E_MAIL,DOMAIN_NAME,CREATE_DATE,CREATE_USER_ID,CREATE_USER_NAME,COMM_CONFIG_SETTYPE_ID,COMM_CONFIG_GOVAFFRS_ID
+	)
+	values(#{id,jdbcType=VARCHAR},
+	#{itemCode,jdbcType=VARCHAR},
+	#{itemName,jdbcType=VARCHAR},
+	#{parentItemCode,jdbcType=VARCHAR},
+	#{parentItemName,jdbcType=VARCHAR},
+	#{cchtName,jdbcType=VARCHAR},   
+	#{commConfigFtManageId,jdbcType=VARCHAR},  
+	#{commConfigFtManageName,jdbcType=VARCHAR},  
+	#{commConfigEconkindId,jdbcType=VARCHAR},  
+	#{commConfigEconkindName,jdbcType=VARCHAR},   
+	#{commConfigLocationId1,jdbcType=VARCHAR},  
+	#{commConfigLocationName1,jdbcType=VARCHAR},  
+	#{commConfigLocationId2,jdbcType=VARCHAR},  
+	#{commConfigLocationName2,jdbcType=VARCHAR}, 
+	#{commConfigLocationId3,jdbcType=VARCHAR},  
+	#{commConfigLocationName3,jdbcType=VARCHAR}, 
+	#{commConfigLocationTownId,jdbcType=VARCHAR},  
+	#{ccltName,jdbcType=VARCHAR},    
+	#{commClvId,jdbcType=VARCHAR},   
+	#{commClvName,jdbcType=VARCHAR},    
+	#{commConfigUnittypeId,jdbcType=VARCHAR},   
+	#{commConfigUnittypeName,jdbcType=VARCHAR},   
+	#{commConfigUnitgradeId,jdbcType=VARCHAR},    
+	#{commConfigUnitgradeName,jdbcType=VARCHAR},  
+	#{commConfigHospitalTypeId,jdbcType=VARCHAR},   
+	#{address,jdbcType=VARCHAR},   
+	#{zipcode,jdbcType=VARCHAR},   
+	#{contactPersonName,jdbcType=VARCHAR},    
+	#{phone,jdbcType=VARCHAR},   
+	#{dateClinicNum,jdbcType=BIGINT},   
+	#{yearOuthospitalNum,jdbcType=BIGINT},   
+	#{authorizedBedNum,jdbcType=BIGINT},   
+	#{outspreadBedNum,jdbcType=BIGINT},        
+	#{doctorNum,jdbcType=BIGINT},       
+	#{nurseNum,jdbcType=BIGINT},       
+	#{technicPersonNum,jdbcType=BIGINT},       
+	#{sickroomNum,jdbcType=BIGINT},        
+	#{operationroomNum,jdbcType=BIGINT},       
+	#{inputCode,jdbcType=VARCHAR},       
+	#{seqNo,jdbcType=BIGINT},       
+	#{comments,jdbcType=VARCHAR},  
+	#{levelDesc,jdbcType=VARCHAR}, 
+	#{EMail,jdbcType=VARCHAR}, 
+	#{domainName,jdbcType=VARCHAR},  
+	#{createDate,jdbcType=DATE}, 
+	#{createUserId,jdbcType=VARCHAR}, 
+	#{createUserName,jdbcType=VARCHAR}, 
+	#{commConfigSettypeId,jdbcType=VARCHAR},  
+	#{commConfigGovaffrsId,jdbcType=VARCHAR})     
+    </insert>
+    <delete id="delete" parameterType="String">
+    <![CDATA[
+    	delete from ${param1}  where ${param2}=#{param3,jdbcType=VARCHAR}
+    ]]>
+		<if test="param5!=''">
+			and ${param4}=#{param5,jdbcType=VARCHAR}
+		</if>
+    </delete>
+    <!-- 查询科室实体 -->
+	<select id="getHspDeptBaseinfo"  parameterType="String" resultMap="hspDeptBaseinfo">
+	<![CDATA[
+		select * from hsp.hsp_dept_baseinfo t where 1=1  
+		]]>
+		<if test="param1!=''">
+			and t.hsp_Config_Baseinfo_Id=#{param1,jdbcType=VARCHAR}
+		</if>
+		<if test="param2!=''">
+			and t.dept_code=#{param2,jdbcType=VARCHAR}
+		</if>
+		<![CDATA[
+		order by t.seq_no
+		]]>
+	</select>
+	<!-- 更新科室 -->
+	<update id="updateDept" parameterMap="hspDeptBaseinfo">
+	update hsp.hsp_dept_baseinfo set
+        SEQ_NO=#{seqNo,jdbcType=BIGINT},                
+	  DEPT_ATTR_CODE=#{deptAttrCode,jdbcType=VARCHAR}, 
+	  DEPT_ATTR_NAME=#{deptAttrName,jdbcType=VARCHAR},  
+	  INPUT_CODE=#{inputCode,jdbcType=VARCHAR},  
+	  COMMENTS=#{comments,jdbcType=VARCHAR},   
+	  HSP_CONFIG_BASEINFO_NAME=#{hspConfigBaseinfoName,jdbcType=VARCHAR},  
+	  DEPT_NAME=#{deptName,jdbcType=VARCHAR},  
+	  HEALTH_BUREAU_CODE=#{healthBureauCode,jdbcType=VARCHAR},  
+	  SOCIAL_SECURITY_BUREAU_CODE=#{socialSecurityBureauCode,jdbcType=VARCHAR},  
+	  OUTP_OR_INP=#{outpOrInp,jdbcType=VARCHAR},   
+	  INTERNAL_OR_SERGERY=#{internalOrSergery,jdbcType=VARCHAR}
+	 where HSP_CONFIG_BASEINFO_ID=#{hspConfigBaseinfoId,jdbcType=VARCHAR}  and dept_code= #{deptCode,jdbcType=VARCHAR}   
+    </update>
+    <!-- 查询科室最大值 -->
+	<select id="getMaxSeqNo"  parameterType="String" resultType="String">
+	<![CDATA[
+		select max(${param2}) from ${param1}  
+		]]>
+	</select>
+	<!-- 添加科室 -->
+	<insert id="addDept" parameterMap="hspDeptBaseinfo">
+	insert into hsp.hsp_dept_baseinfo(
+		SEQ_NO,DEPT_ATTR_CODE,DEPT_ATTR_NAME,INPUT_CODE,COMMENTS,HSP_CONFIG_BASEINFO_NAME,
+		DEPT_NAME,HEALTH_BUREAU_CODE,SOCIAL_SECURITY_BUREAU_CODE,OUTP_OR_INP,INTERNAL_OR_SERGERY,
+		HSP_CONFIG_BASEINFO_ID,dept_code
+	)
+	values(
+	  #{seqNo,jdbcType=BIGINT},                
+	  #{deptAttrCode,jdbcType=VARCHAR}, 
+	  #{deptAttrName,jdbcType=VARCHAR},  
+	 #{inputCode,jdbcType=VARCHAR},  
+	  #{comments,jdbcType=VARCHAR},   
+	  #{hspConfigBaseinfoName,jdbcType=VARCHAR},  
+	  #{deptName,jdbcType=VARCHAR},  
+	  #{healthBureauCode,jdbcType=VARCHAR},  
+	  #{socialSecurityBureauCode,jdbcType=VARCHAR},  
+	  #{outpOrInp,jdbcType=VARCHAR},   
+	 #{internalOrSergery,jdbcType=VARCHAR},
+	#{hspConfigBaseinfoId,jdbcType=VARCHAR}, 
+	#{deptCode,jdbcType=VARCHAR}  
+	) 
+    </insert>
+</mapper>
