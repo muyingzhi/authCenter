@@ -181,23 +181,6 @@ public class LoginController {
 			List<SecurityConfigPublicClass> pcList = loginSecondForm.getPcList();
 			String ZHGL="",BSHCD="";
 
-			for(SecurityConfigPublicClass securityConfigPublicClass:pcList){
-			    if("综合管理".equals(securityConfigPublicClass.getClassName())){
-					ZHGL = "综合管理";
-				}else if("宝石花菜单".equals(securityConfigPublicClass.getClassName())){
-					BSHCD = "宝石花菜单";
-				}
-			}
-			if("ZHGL".equalsIgnoreCase(mode)&&ZHGL.length()>0){
-				mode="综合管理";
-			}else if("BSHCD".equalsIgnoreCase(mode)&&ZHGL.length()>0){
-				mode="宝石花菜单";
-			}else{
-				mode="";
-			}
-			loginSecondForm.setMode(mode);
-			String commuPsnBaseInfoId=Converter.toBlank(request.getParameter("commuPsnBaseInfoId")) ;
-			request.setAttribute("commuPsnBaseInfoId", commuPsnBaseInfoId);
 			
 			request.setAttribute("loginSecondForm", loginSecondForm);
 			request.setAttribute("staffName", sessionForm.getStaffName());
@@ -205,7 +188,9 @@ public class LoginController {
 			return "main";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "fail";
+			request.setAttribute("error", "e.getMessage()");
+			
+			return "login";
 		}
 	}
 	

@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <html>
     <head>
         <meta charset="UTF-8">
@@ -104,6 +105,8 @@
                                     <a href="" class="fl forget-psd">忘记密码</a>
                                     <a href="" class="fr register">新用户注册</a>
                                 </div>--%>
+                                
+                                <div>error:${error}</div>
                             </div>
                         </div>
                     </div>

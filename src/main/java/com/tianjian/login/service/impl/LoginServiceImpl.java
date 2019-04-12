@@ -36,15 +36,15 @@ public class LoginServiceImpl implements ILoginService {
 	/**
 	 * @return Returns the LoginDAO.
 	 */
-	public void checkUser(PortalWebPageForm form,HttpServletRequest request) {
-		
+	public SecurityStaffBaseinfo checkUser(PortalWebPageForm form,HttpServletRequest request) {
+		SecurityStaffBaseinfo thisUser = null;
 		List<SecurityStaffBaseinfo> userList = loginDAO.getByCode(form.getStaffCode());
 		if(userList.size()==1){
 			SecurityStaffBaseinfo staff = userList.get(0);
-			if (form.getPassword().equals(staff.getPassword())){
-
-			}
+			//@Todo 
+			thisUser = staff;
 		}	
+		return thisUser;
 	}
 
 	public void getPublicClass(String UserId, LoginSecondForm loginSecondForm, HttpServletRequest request) {

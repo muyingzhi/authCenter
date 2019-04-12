@@ -6,13 +6,13 @@ import com.tianjian.login.bean.LoginMenuForm;
 import com.tianjian.login.bean.LoginSecondForm;
 import com.tianjian.login.bean.PortalWebPageForm;
 import com.tianjian.login.bean.Target;
-
+import com.tianjian.login.model.SecurityStaffBaseinfo;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface ILoginService {
 
-	public void checkUser(PortalWebPageForm form,HttpServletRequest request);	
+	public SecurityStaffBaseinfo checkUser(PortalWebPageForm form,HttpServletRequest request);	
 	
     public void getPublicClass(String UserId, LoginSecondForm loginSecondForm ,HttpServletRequest request);
 
